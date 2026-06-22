@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "home.html",
+    "href": "home.html",
+    "title": "Daniel Wang: Project Portfolio",
+    "section": "",
+    "text": "Projects"
+  },
+  {
+    "objectID": "home.html#quarto",
+    "href": "home.html#quarto",
+    "title": "Daniel Wang: Project Portfolio",
+    "section": "Quarto",
+    "text": "Quarto\nQuarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "home.html#running-code",
+    "href": "home.html#running-code",
+    "title": "Daniel Wang: Project Portfolio",
+    "section": "Running Code",
+    "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
+  },
+  {
+    "objectID": "home.html#about-me",
+    "href": "home.html#about-me",
+    "title": "Daniel Wang: Project Portfolio",
+    "section": "About Me",
+    "text": "About Me\nHello, I’m Daniel Wang and I recently graduated from with a masters degree in statistics from NC State. This is a portfolio I’ve made to showcase projects covering data cleaning, visualization, and statistical modelling. These were challenging experiences that highlight the methods and tools I use when working with data. My goal is to not only procure informative, valid analyses but also to clearly communicate the results to a broad audience.\nStudying statistics has given me an opportunity to use mathematics, statistical methods, and critical thinking to tackle complex problems. Tools such as R, Python, or SAS are languages I regularly use for cleaning, modelling, and visualizing data among other purposes. Hopefully, you won’t need my convincing and the projects shown here can do the talking!"
+  },
+  {
+    "objectID": "home.html#education-and-experience",
+    "href": "home.html#education-and-experience",
+    "title": "Daniel Wang: Project Portfolio",
+    "section": "Education and Experience",
+    "text": "Education and Experience"
+  },
+  {
+    "objectID": "home.html#querying-with-macros",
+    "href": "home.html#querying-with-macros",
+    "title": "Daniel Wang: Project Portfolio",
+    "section": "Querying with Macros",
+    "text": "Querying with Macros"
+  },
+  {
+    "objectID": "home.html#prediction-of-vaccine-severity-response",
+    "href": "home.html#prediction-of-vaccine-severity-response",
+    "title": "Daniel Wang: Project Portfolio",
+    "section": "Prediction of Vaccine Severity Response",
+    "text": "Prediction of Vaccine Severity Response"
+  },
+  {
+    "objectID": "home.html#neuse-township-traffic-crime-analysis",
+    "href": "home.html#neuse-township-traffic-crime-analysis",
+    "title": "Daniel Wang: Project Portfolio",
+    "section": "Neuse Township: Traffic Crime Analysis",
+    "text": "Neuse Township: Traffic Crime Analysis"
+  },
+  {
+    "objectID": "home.html#modeling-march-madness-score-differentials",
+    "href": "home.html#modeling-march-madness-score-differentials",
+    "title": "Daniel Wang: Project Portfolio",
+    "section": "Modeling March Madness Score Differentials",
+    "text": "Modeling March Madness Score Differentials"
+  }
+]

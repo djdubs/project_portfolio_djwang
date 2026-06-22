@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+a {
+  color: #003366;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0066cc;
+}
