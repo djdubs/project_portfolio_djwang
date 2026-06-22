@@ -1,7 +1,7 @@
 ---
 title: "Daniel Wang: Project Portfolio"
 ---
-[Projects](projects.qmd){target="_blank" rel="noopener"}
+[Spatial Analysis Project](spatial_analysis.qmd){target="_blank" rel="noopener"}
 
 # Demo
 

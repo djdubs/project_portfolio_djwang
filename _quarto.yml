@@ -7,14 +7,14 @@ website:
     left:
       - href: home.qmd
         text: Home
-      - href: projects.qmd
-        text: Projects
+      - href: spatial_analysis.qmd
+        text: Spatial Analysis
 
 format:
   html:
     theme: pulse
     css: no_stylist.css
-    toc: true
+    toc: false
 
 
 
