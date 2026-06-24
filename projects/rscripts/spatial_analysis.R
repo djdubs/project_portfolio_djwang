@@ -1,6 +1,5 @@
-# Daniel Wang
-# ST 533 Project 3
-# 5/1/2026
+# Author: Daniel Wang
+# Last update: 6/24/2026
 
 library(spatstat)
 library(sf)
@@ -42,12 +41,14 @@ n <- nrow(N1)
 n2 <- nrow(N2)
 
 # simple demo plot to view pt patterns
-png("projects/results/sa_p1.png", width = 1000, height = 600)
-polymap(Neuse.poly)
-title(xlab = "Longitude", ylab = "Latitude")
+png("projects/results/sa_p1.png", width = 8, height = 5, units = "in", res=300)
+par(mar = c(5.1,4.1,1,1))
+plot(Neuse.poly, type="l", asp=1, cex.axis = 1, xlab=NA, ylab=NA)
+title(xlab = "Longitude", ylab = "Latitude", cex.lab = 1)
 points(N1,col=2, pch=1)
 points(N2,col=4, pch=3)
-legend("topleft",c("Weekend","Weekday"),col=c(2,4),pch=c(1,3))
+legend("topleft",c("Weekend","Weekday"),col=c(2,4),pch=c(1,3), cex = 1)
+par(mar = c(5.1,4.1,4.1,2.1))
 dev.off()
 
 # ______________________________________________________________________________

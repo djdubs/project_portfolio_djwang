@@ -27,7 +27,7 @@ Here I investigate crime data in the Neuse township of Wake County, NC from 2015
 First to verify the validity of this question, I will be testing to see if the point patterns for these data show complete spatial randomness. Then I will be comparing the intensities of each point pattern.  
 Below is the collective point pattern of traffic crimes in Neuse.  
 
-![Point pattern of traffic crimes in Neuse](projects/results/sa_p1){width=600}
+![Point pattern of traffic crimes in Neuse](projects/results/sa_p1){width=700}
 
 ### K-function Tests for Complete Spatial Randomness  
 To test for complete spatial randomness, I am going to compute the K function for both point patterns.  
