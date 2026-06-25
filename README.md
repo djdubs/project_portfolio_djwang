@@ -1,6 +1,6 @@
 ## Running R code
 
-R code can be run to replicate the results in the *projects/results* directory. Libraries may need to be installed prior to running the script. The required list of libraries is displayed at the beginning of each script.\
+R code can be run to replicate the results in the *projects/results* directory. Libraries may need to be installed prior to running the script. The required list of libraries is displayed at the beginning of each script.
 
 If a script uses external data, you will need to create a sub-folder *data* under the *projects* directory. The directions to obtain the data for each project are shown in the section below. For privacy reasons, the data for some projects may be excluded.
 
