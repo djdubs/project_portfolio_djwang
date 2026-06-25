@@ -2,32 +2,23 @@
 title: "Spatial Analysis"
 ---
 
-## Quarto
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
-1 + 1
+```{r, include=FALSE}
+source("projects/rscripts/spatial_analysis.R")
 ```
 
-You can add options to executable code like this 
+Here I investigate crime data in the Neuse township of Wake County, NC from 2015 to 2026. This data comes from Wake County's Public [Database](https://data.wake.gov/search) and contains all police reports from the Raleigh Police Department. To analyze this data, I will be running this data in R; below is a row from the dataset.  
 
-```{r}
-#| echo: false
-2 * 2
+```{r, echo=FALSE}
+wake[1,]
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
-
-Here I investigate crime data in the Neuse township of Wake County, NC from 2015 to 2026. Is there a difference in the point patterns between traffic crimes on weekdays and on weekends? By comparing these two point patterns, we will be able to see if and where there are regions of concentrated traffic crimes partitioned into weekdays and weekends.  
+Is there a difference in the point patterns between traffic crimes on weekdays and on weekends? By comparing these two point patterns, we will be able to see if and where there are regions of concentrated traffic crimes partitioned into weekdays and weekends.  
 First to verify the validity of this question, I will be testing to see if the point patterns for these data show complete spatial randomness. Then I will be comparing the intensities of each point pattern.  
 Below is the collective point pattern of traffic crimes in Neuse.  
 
-![Point pattern of traffic crimes in Neuse](projects/results/sa_p1){width=700}
+![Point pattern of traffic crimes in Neuse, 2015-2026](projects/results/sa_p1){width=700}
 
 ### K-function Tests for Complete Spatial Randomness  
 To test for complete spatial randomness, I am going to compute the K function for both point patterns.  
