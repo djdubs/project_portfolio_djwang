@@ -40,7 +40,7 @@ nsim=5
 n <- nrow(N1)
 n2 <- nrow(N2)
 
-# simple demo plot to view pt patterns
+# simple demo plot to view pt patterns (note that setting units to inches only affects the printed output and not how results are shown on other devices)
 png("projects/results/sa_p1.png", width = 8, height = 5, units = "in", res=300)
 par(mar = c(5.1,4.1,1,1))
 plot(Neuse.poly, type="l", asp=1, cex.axis = 1, xlab=NA, ylab=NA)
@@ -62,34 +62,28 @@ dev.off()
 h=seq(.001,0.03,0.001)
 kpts=khat(N1,Neuse.poly,h)
 
-# k function plot
-png("projects/results/sa_p2.png", width = 800, height = 600)
-par(mar = c(5.1,4.1,1,1))
-plot(h, kpts, type="l", lwd=1.5, ylab="K", xlab="Spatial Lag",
-     main = "K-function vs. CSR curve | Weekend Group")
-points(h, pi*h^2, type='l', col='red')
-legend("topleft", lwd=c(1.5,1), 
-       col=c("black", "red"), 
-       legend=c(expression(hat(K)), expression(pi*h^2)))
-par(mar = c(5.1,4.1,4.1,2.1))
-dev.off()
-
 # Repeating k function for N2
 kpts.2=khat(N2,Neuse.poly,h)
 
-# k function plot
-png("projects/results/sa_p3.png", width = 800, height = 600)
-par(mar = c(5.1,4.1,1,1))
-plot(h, kpts.2, type="l", lwd=1.5, ylab="K", xlab="Spatial Lag",
-     main = "K-function vs. CSR curve | Weekday Group")
+# k-function plot
+png("projects/results/sa_p2.png", width = 8, height = 5, units = "in", res=300)
+
+par(mar = c(5.1,4.1,1,1), mfrow=c(1,2))
+
+plot(h, kpts, type="l", lwd=1.5, ylab="K", xlab="Spatial Lag",
+     main = "Weekend")
 points(h, pi*h^2, type='l', col='red')
 legend("topleft", lwd=c(1.5,1), 
        col=c("black", "red"), 
        legend=c(expression(hat(K)), expression(pi*h^2)))
-par(mar = c(5.1,4.1,4.1,2.1))
+
+plot(h, kpts.2, type="l", lwd=1.5, ylab="K", xlab="Spatial Lag",
+     main = "Weekday")
+points(h, pi*h^2, type='l', col='red')
+
+par(mar = c(5.1,4.1,4.1,2.1), mfrow=c(1,1))
+
 dev.off()
-
-
 
 # ______________________________________________________________________________
 # Contour Intensity plots for Weekend and weekday data
@@ -98,25 +92,30 @@ b=.0082 # bandwitdh of 0.5km
 lam.nx=150
 lam.ny=200
 
-# intensity plot for N1
+# kernel estimates for both groups
 lam.est=kernel2d(N1, Neuse.poly, b, lam.nx, lam.ny)
-png("projects/results/sa_p4.png", width = 800, height = 600)
-image(lam.est$x,lam.est$y,lam.est$z,col=terrain.colors(100), asp=1,
-      main="Map of Kernel Estimated Intensities on Weekends", xlab="Longitude", ylab="Latitude")
-polymap(Neuse.poly,add=TRUE)
-pointmap(N1,pch=20,cex=1,add=TRUE)
-dev.off()
-
-# intensity plot for N2
 lam.est.2=kernel2d(N2, Neuse.poly, b, lam.nx, lam.ny)
-png("projects/results/sa_p5.png", width = 800, height = 600)
-image(lam.est.2$x,lam.est.2$y,lam.est.2$z,col=terrain.colors(100), asp=1,
-      main="Map of Kernel Estimated Intensities on Weekdays", xlab="Longitude", ylab="Latitude")
+
+png("projects/results/sa_p3.png", width = 8, height = 5, units = "in", res=300)
+
+par(mfrow=c(1,2), mar = c(5.1,4.1,2,1))
+
+image(lam.est$x,lam.est$y,lam.est$z,col=terrain.colors(100), asp=1,
+      main="Weekends", xlab="Longitude", ylab="Latitude")
 polymap(Neuse.poly,add=TRUE)
-pointmap(N2,pch=20,cex=1,add=TRUE)
-SpectrumLegend("topleft", legend = c("Low","         ", "High"),
+pointmap(N1,pch=20,cex=.75,add=TRUE)
+SpectrumLegend("topleft", legend = c("High","","","Low"),
                palette = terrain.colors(100), lwd = 6,
-               horiz = T, title="Intensity")
+               horiz = F, title="Intensity", cex=0.75)
+
+image(lam.est.2$x,lam.est.2$y,lam.est.2$z,col=terrain.colors(100), asp=1,
+      main="Weekdays", xlab="Longitude", ylab=NA)
+polymap(Neuse.poly,add=TRUE)
+pointmap(N2,pch=20,cex=.75,add=TRUE)
+legend("topleft", legend = c("Bandwidth=0.5km"), cex=0.6, pch = NA)
+
+par(mfrow=c(1,1), mar = c(5.1,4.1,4.1,2.1))
+
 dev.off()
 
 # ______________________________________________________________________________
@@ -138,14 +137,16 @@ log.risk <- log.ratio - l2
 colpalette <- viridis_pal(option = "magma")
 colpal_rev <- rev(colpalette(15))
 
-png("projects/results/sa_p6.png", width = 800, height = 600)
+png("projects/results/sa_p4.png", width = 8, height = 5, units = "in", res=300)
+par(mar = c(5.1,4.1,1,1))
 image(lam.est$x,lam.est$y,log.risk,col=colpal_rev, asp=1,
-      main="Map of Log Relative Risk", xlab="Longitude", ylab="Latitude",
+      main=NA, xlab="Longitude", ylab="Latitude",
       ylim = c(35.82, 35.95))
 polymap(Neuse.poly, add=T)
 SpectrumLegend("topleft", legend = c("Low","         ", "High"),
                palette = colpal_rev, lwd = 6,
                horiz = T, title="Relative Risk")
+par(mar = c(5.1,4.1,4.1,2.1))
 dev.off()
 
 # ______________________________________________________________________________
@@ -194,13 +195,15 @@ sig.vals[log.risk > upper.tol] <- 1
 
 sig.width <- upper.tol-lower.tol
 
-png("projects/results/sa_p7.png", width = 800, height = 600)
+png("projects/results/sa_p5.png", width = 8, height = 5, units = "in", res=300)
+par(mar = c(5.1,4.1,1,1))
 image(lam.est$x,lam.est$y,sig.vals,col=c("forestgreen", "white", "red3"), asp=1,
-      main="Regions Exceeding 95% MC Intervals", xlab="Longitude", ylab="Latitude",
+      main=NA, xlab="Longitude", ylab="Latitude",
       ylim = c(35.82, 35.95))
 polymap(Neuse.poly, add=T)
 legend("topleft", legend = c("Higher Weekend Intensity", "Higher Weekday Intensity"),
        pch = 16, col = c("red3", "forestgreen"))
+par(mar = c(5.1,4.1,4.1,2.1))
 dev.off()
 
 # spatial map of tolerance interval widths

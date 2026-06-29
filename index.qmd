@@ -2,8 +2,6 @@
 title: "Hello, I am ppthugxd"
 ---
 
-[First Project](spatial_analysis.qmd){target="_blank" rel="noopener"}
-
 ![Me and the goat](selfie){width=500 fig-align="left"}
 
 ## About Me
