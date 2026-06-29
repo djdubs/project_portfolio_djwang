@@ -2,10 +2,11 @@ project:
   type: website
 
 website:
+  search: false
   title: "Project Portfolio"
   navbar:
     left:
-      - href: home.qmd
+      - href: index.qmd
         text: Home
       - href: spatial_analysis.qmd
         text: Spatial Analysis
@@ -15,6 +16,7 @@ format:
     theme: pulse
     css: no_stylist.css
     toc: false
+    anchor-sections: false
 
 
 

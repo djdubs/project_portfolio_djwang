@@ -3,22 +3,39 @@ title: "Spatial Analysis"
 ---
 
 
-
 ```{r, include=FALSE}
-source("projects/rscripts/spatial_analysis.R")
+library(sf)
+wake_r1=read.csv("projects/data/WakeCrime.csv", nrows = 1)
 ```
 
-Here I investigate crime data in the Neuse township of Wake County, NC from 2015 to 2026. This data comes from Wake County's Public [Database](https://data.wake.gov/search) and contains all police reports from the Raleigh Police Department. To analyze this data, I will be running this data in R; below is a row from the dataset.  
+Here I investigate crime data in the Neuse township of Wake County, NC from 2015 to 2026. This data comes from Wake County's Public [Database](https://data.wake.gov/search){target="_blank" rel="noopener"} and contains all police reports from the Raleigh Police Department. To analyze this data, I will be running this data in R; below is a row from the dataset.  
 
 ```{r, echo=FALSE}
-wake[1,]
+wake_r1
 ```
+
+As we can see, there are very specific details for each row or report. I am only going to be looking at traffic crimes that occurred in the Neuse township.  
+Township geometry data is also available from the database mentioned earlier, below we can see how that data is visualized.  
+```{r}
+shapeWake <- st_read("projects/data/Townships-shp/townships.shp", quiet=T)
+shapeWake=st_transform(shapeWake, "EPSG:4326")
+plot(shapeWake["NAME"], main=NA, key.length = 1)
+```
+I am interested in viewing the difference, or lack thereof, between the occurrence of traffic crimes on weekdays and weekends. Below we filter and partition the data for this investigation.  
+```{r, eval=FALSE}
+weekends <- c("Saturday", "Sunday")
+# respective data sets for weekdays and weekends
+wake1 <- wake[wake$Reported.Day.of.Week %in% weekends &
+                wake$Crime_Category=="TRAFFIC",]
+wake2 <- wake[!(wake$Reported.Day.of.Week %in% weekends) &
+                wake$Crime_Category=="TRAFFIC",]
+```
+
+Next, we can view the collective point pattern of traffic crimes in Neuse.  
+![Point pattern of traffic crimes in Neuse, 2015-2026](projects/results/sa_p1){width=700}
 
 Is there a difference in the point patterns between traffic crimes on weekdays and on weekends? By comparing these two point patterns, we will be able to see if and where there are regions of concentrated traffic crimes partitioned into weekdays and weekends.  
 First to verify the validity of this question, I will be testing to see if the point patterns for these data show complete spatial randomness. Then I will be comparing the intensities of each point pattern.  
-Below is the collective point pattern of traffic crimes in Neuse.  
-
-![Point pattern of traffic crimes in Neuse, 2015-2026](projects/results/sa_p1){width=700}
 
 ### K-function Tests for Complete Spatial Randomness  
 To test for complete spatial randomness, I am going to compute the K function for both point patterns.  

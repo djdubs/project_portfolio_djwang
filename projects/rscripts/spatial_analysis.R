@@ -26,7 +26,7 @@ sort(table(wake$Crime_Category), decreasing = T)
 weekends <- c("Saturday", "Sunday")
 daytime <- seq(6,17)
 
-# respective data sets for night and day times
+# respective data sets for weekdays and weekends
 wake1 <- wake[wake$Reported.Day.of.Week %in% weekends &
                 wake$Crime_Category=="TRAFFIC",]
 wake2 <- wake[!(wake$Reported.Day.of.Week %in% weekends) &
@@ -153,7 +153,7 @@ dev.off()
 # ______________________________________________________________________________
 set.seed(608)
 
-monte.sims <- 200
+monte.sims <- 100
 
 lrisk.sims <- list()
 
