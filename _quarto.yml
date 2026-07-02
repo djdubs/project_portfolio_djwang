@@ -11,6 +11,8 @@ website:
         text: Home
       - href: spatial_analysis.qmd
         text: Spatial Analysis
+      - href: vaers_report.qmd
+        text: Severity Classification Task
 
 format:
   html:

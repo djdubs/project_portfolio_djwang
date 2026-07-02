@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Hello, I am ppthugxd – Project Portfolio</title>
+<title>Vaccine Severity Prediction – Project Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -79,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Spatial Analysis</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./vaers_report.html"> 
+    <a class="nav-link active" href="./vaers_report.html" aria-current="page"> 
 <span class="menu-text">Severity Classification Task</span></a>
   </li>  
 </ul>
@@ -99,7 +99,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hello, I am ppthugxd</h1>
+<h1 class="title">Vaccine Severity Prediction</h1>
 </div>
 
 
@@ -116,16 +116,14 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="quarto-figure quarto-figure-left">
-<figure class="figure">
-<p><img src="selfie.png" class="img-fluid figure-img" width="500"></p>
-<figcaption>Me and the goat</figcaption>
-</figure>
-</div>
-<section id="about-me" class="level2">
-<h2 data-anchor-id="about-me">About Me</h2>
-<p>Hello, I’m Daniel Wang and I recently graduated from with a masters degree in statistics from NC State. This is a portfolio I’ve made to showcase projects covering data cleaning, visualization, and statistical modelling. These were challenging experiences that highlight the methods and tools I use when working with data. My goal is to not only procure informative, valid analyses but also to clearly communicate the results to a broad audience.</p>
-<p>Studying statistics has given me an opportunity to use mathematics, statistical methods, and critical thinking to tackle complex problems. Tools such as R, Python, or SAS are languages I regularly use for cleaning, modelling, and visualizing data among other purposes. Hopefully, you won’t need my convincing and the projects shown here can do the talking!</p>
+<p>This is a project I worked on in my statistical learning methods course. Here, me and two peers conduct a predictive modelling analysis for the VAERS event reports collected in 2018-2021. While our main goal was to explore patterns in responses to different vaccines, we were also interested in viewing changes from the oncoming Covid-19 pandemic. The dataset encompasses approximately 922,000 records and includes demographic, temporal, geographic, administrative, and free-text fields.<br>
+Our variable of interest is how severe a given patient’s response was to receiving a vaccine. For analysis purposes, a binary indicator was used to capture high-severity cases. These include instances of hospitalization, life-threatening illness, disability, or death. The predictive analysis uses patient demographics, symptoms, and vaccine information to produce our predictions.<br>
+The distribution of severity is heavily right-skewed. Approximately 68% of reports carry no documented clinical outcome while 8-9% qualify as high-severity. Exploratory analysis identifies age and sex as strong structured predictors, with older and younger individuals facing higher odds of severe outcomes, while males experience higher odds of severe outcomes relative to females. Reporting volume surged dramatically in 2020-2021 due to the COVID-19 vaccine rollout, though the proportional severity composition remained stable across years. Predictive analysis suggests that the presence of symptoms such as dyspnoea and asthenia are strongly correlated with high severity cases.</p>
+<section id="data-overview" class="level1">
+<h1>Data Overview</h1>
+<p>The data used for this can be found in the public database for the <a href="https://vaers.hhs.gov/data/datasets.html" target="_blank" rel="noopener">Vaccine Adverse Event Reporting System</a> (VAERS). The main data, symptom data, and vaccine data are all included in this project.</p>
+<p>The Vaccine Adverse Event Reporting System (VAERS) is a national passive pharmacovigilance program jointly administered by the CDC and FDA. This project uses annual VAERS data files for 2018 through 2021, combined into a single analysis dataset. After binding all four annual files, the raw dataset contains approximately 922,000 records and 36 variables. Each record represents one adverse event report and includes demographic information (age, sex, state), clinical outcome indicators (death, hospitalization, ER visit, life-threatening illness, disability, office visit), temporal variables (vaccination date, onset date, days to onset), administrative fields (administration setting, form version, report year), and several free-text narrative fields (symptom description, medical history, current illnesses, concomitant medications, allergies).</p>
+<p>The primary response variable is a derived ordinal composite score (SEVERITY, 0-5) constructed by assigning each report the highest applicable clinical outcome. A binary indicator (HIGH_SEVERITY = 1 if SEVERITY &gt;= 3) is used as the modeling target, capturing the clinically critical outcomes of hospitalization, extended hospital stay, life-threatening illness, disability, and death.</p>
 
 
 </section>
