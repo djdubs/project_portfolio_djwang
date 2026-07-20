@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -116,16 +150,71 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a project I worked on in my statistical learning methods course. Here, me and two peers conduct a predictive modelling analysis for the VAERS event reports collected in 2018-2021. While our main goal was to explore patterns in responses to different vaccines, we were also interested in viewing changes from the oncoming Covid-19 pandemic. The dataset encompasses approximately 922,000 records and includes demographic, temporal, geographic, administrative, and free-text fields.<br>
-Our variable of interest is how severe a given patient’s response was to receiving a vaccine. For analysis purposes, a binary indicator was used to capture high-severity cases. These include instances of hospitalization, life-threatening illness, disability, or death. The predictive analysis uses patient demographics, symptoms, and vaccine information to produce our predictions.<br>
-The distribution of severity is heavily right-skewed. Approximately 68% of reports carry no documented clinical outcome while 8-9% qualify as high-severity. Exploratory analysis identifies age and sex as strong structured predictors, with older and younger individuals facing higher odds of severe outcomes, while males experience higher odds of severe outcomes relative to females. Reporting volume surged dramatically in 2020-2021 due to the COVID-19 vaccine rollout, though the proportional severity composition remained stable across years. Predictive analysis suggests that the presence of symptoms such as dyspnoea and asthenia are strongly correlated with high severity cases.</p>
+<p>This is a project I worked on as part of my statistical learning methods course. Here, me and two peers conduct a predictive modelling analysis for the VAERS event reports collected in 2018-2021. While our main goal was to explore patterns in responses to different vaccines, we were also interested in viewing changes from the oncoming Covid-19 pandemic. The dataset encompasses approximately 922,000 records and includes demographic, temporal, geographic, administrative, and free-text fields.</p>
+<p>Our variable of interest is how severe a given patient’s response was to receiving a vaccine. For analysis purposes, a binary indicator was used to capture high-severity cases. These include instances of hospitalization, life-threatening illness, disability, or death. The predictive analysis uses patient demographics, symptoms, and vaccine information to produce our predictions.</p>
+<p>The distribution of severity is heavily right-skewed. Approximately 68% of reports carry no documented clinical outcome while 8-9% qualify as high-severity. Exploratory analysis identifies age and sex as strong structured predictors, with older and younger individuals facing higher odds of severe outcomes, while males experience higher odds of severe outcomes relative to females. Reporting volume surged dramatically in 2020-2021 due to the COVID-19 vaccine rollout, though the proportional severity composition remained stable across years. Predictive analysis suggests that the presence of symptoms such as dyspnoea and asthenia are strongly correlated with high severity cases.</p>
 <section id="data-overview" class="level1">
 <h1>Data Overview</h1>
-<p>The data used for this can be found in the public database for the <a href="https://vaers.hhs.gov/data/datasets.html" target="_blank" rel="noopener">Vaccine Adverse Event Reporting System</a> (VAERS). The main data, symptom data, and vaccine data are all included in this project.</p>
+<p>The data used here can be found in the public database for the <a href="https://vaers.hhs.gov/data/datasets.html" target="_blank" rel="noopener">Vaccine Adverse Event Reporting System</a> (VAERS). The main data, symptom data, and vaccine data (2018-2021) are all included in this project.</p>
 <p>The Vaccine Adverse Event Reporting System (VAERS) is a national passive pharmacovigilance program jointly administered by the CDC and FDA. This project uses annual VAERS data files for 2018 through 2021, combined into a single analysis dataset. After binding all four annual files, the raw dataset contains approximately 922,000 records and 36 variables. Each record represents one adverse event report and includes demographic information (age, sex, state), clinical outcome indicators (death, hospitalization, ER visit, life-threatening illness, disability, office visit), temporal variables (vaccination date, onset date, days to onset), administrative fields (administration setting, form version, report year), and several free-text narrative fields (symptom description, medical history, current illnesses, concomitant medications, allergies).</p>
+<p>Below is one row from the cleaned dataset.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  VAERS_ID SEVERITY high_severity AGE_YRS SEX NUMDAYS pyrexia dyspnoea erythema
+1    50938        0             0      NA   F      NA       0        0        1
+  asthenia covid19 chest_pain dec_app cov19 varzos flu4 ppv hpv9 sp yf
+1        0       0          0       0     0      1    0   0    0  0  0</code></pre>
+</div>
+</div>
 <p>The primary response variable is a derived ordinal composite score (SEVERITY, 0-5) constructed by assigning each report the highest applicable clinical outcome. A binary indicator (HIGH_SEVERITY = 1 if SEVERITY &gt;= 3) is used as the modeling target, capturing the clinically critical outcomes of hospitalization, extended hospital stay, life-threatening illness, disability, and death.</p>
+<p>The remaining columns include specific patient demographics(age and sex) as well as the number of days from the vaccination date until onset of symptoms. Specific symptoms of interest(pyrexia, dyspnoea, etc.) are present as binary indicators. Additionally, certain vaccines of interest(cov19, varzos, etc.) are included as binary indicators.</p>
+</section>
+<section id="predictive-analysis" class="level1">
+<h1>Predictive Analysis</h1>
+<section id="model-specifications" class="level2">
+<h2 data-anchor-id="model-specifications">Model Specifications</h2>
+<p>We again conducted the predictive analysis using a binary classification task. That is, a model was fit using the response HIGH_SEVERITY where HIGH_SEVERITY = 1(SEVERITY ≥ 3). For computational purposes while modelling, a random sample of 10000 observations was selected from the data and a 70/30 training &amp; test split for evaluation purposes. Below shows how the data was split with a simple random sample.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(vaers_data), <span class="at">size =</span> <span class="dv">10000</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># We isolate the predictors for the sample data</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sample_data <span class="ot">&lt;-</span> vaers_data[samples, <span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Training and test sets</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(sample_data), <span class="fu">round</span>(<span class="fl">0.7</span><span class="sc">*</span><span class="fu">nrow</span>(sample_data)), <span class="at">replace =</span> F)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>training_data <span class="ot">&lt;-</span> sample_data[index,]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>testing_data <span class="ot">&lt;-</span> sample_data[<span class="sc">-</span>index,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There are 16 predictors used for predicting the binary outcome of severity among patients. Patient age and the number of days until onset are the two positive continuous variables, with patient age including a 2nd degree polynomial term. Sex is a categorical variable with three levels: male, female, and unknown. There are seven indicator variables for symptoms suspected of affecting the rate of high severity. Lastly there are five indicator variables for commonly used vaccine types.</p>
+<p>Before modelling, imputation was performed for patient age and days until onset. Since age follows an approximately normal distribution, missing values were imputed with the respective mean for nonmissing age values. Days until onset (NUMDAYS) is highly skewed, with a median of 1 and a mean of about 24. Therefore the median was used for imputing missing values.</p>
+<p>The indicator variables for the smallpox and yellow fever vaccines were dropped due to a close-to-zero use proportion.</p>
+</section>
+<section id="modelling-outline-evaluation" class="level2">
+<h2 data-anchor-id="modelling-outline-evaluation">Modelling Outline &amp; Evaluation</h2>
+<p>There are a variety of different models that can be used for classification tasks. Here, we’ll be using logistic regression, discriminant analysis(LDA &amp; QDA), and bagged random forest. LDA and QDA were fit using repeated cross validation and the random forest model was fit using out-of-bag resampling. The procedure of fitting a model can be generalized below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The training method, repeate cross validation in this case</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tr <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"repeatedcv"</span>, <span class="at">number =</span> <span class="dv">10</span>, <span class="at">repeats =</span> <span class="dv">20</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting a linear discriminant analysis using the above training method</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>lda.fit <span class="ot">&lt;-</span> <span class="fu">train</span>(high_severity <span class="sc">~</span> .,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> trainer, <span class="at">method=</span><span class="st">"lda"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trControl =</span> tr)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicting severity on the test data using the trained model</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>lda.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(lda.fit, <span class="at">newdata =</span> test, <span class="at">type =</span> <span class="st">"raw"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To evaluate the performance of each model, we primarily use the prediction accuracy/error and the model specificity. The model specificity represents the model’s ability to detect an occurrence of an event when it happens. Since the response variable is a relatively rare event, the no-information rate is already high at about 92%. Therefore, the ability for a model to detect occurrences of high severity has higher priority in our evaluation.</p>
+<p>For each model, predictions were made on the test data and were used to make the following confusion tables, presenting the predicted vs.&nbsp;true values for each fit. The no-information rate from the random sample is 92.83% and the test size is 3000.</p>
+</section>
+<section id="comparisons-discussion" class="level2">
+<h2 data-anchor-id="comparisons-discussion">Comparisons &amp; Discussion</h2>
+<p>The logistic model offers slightly higher accuracy than the no-information rate, but only slightly. In addition to the low specificity rate, the logistic model doesn’t seem to offer much in comparison to the no-information rate. The LDA fit has slightly lower accuracy than the NIR but on the other hand has a higher specificity rate. The QDA model has much lower accuracy than the NIR but has a much higher specificity rate than the other models at 0.5163. The random forest model has the highest accuracy edging out the logistic model but slightly lower specificity rate than the LDA model.</p>
+<p>Comparing each model, we can see that the random forest model completely outperforms the logistic model in both accuracy and specificity. The LDA and QDA models both outperform the random forest model in specificity but suffer lower accuracy. While the QDA model has by far the highest specificity rate, it also incorrectly predicts many high severity cases. Since the LDA model presents the most balance in terms of the accuracy and specificity rate, we choose this model as the best fit for the given data. However, if we are mostly interested in a model with a high specificity rate, then the QDA model in this instance would be a reasonable choice. In the last report, when using only age, sex, and days to onset as the predictors, we saw that the resulting models were unable to detect high severity cases. By adding several symptom indicators, we were able to detect significantly more high severity cases. Since 5 out of 7 symptoms showed significance in the logistic model, it seems that prediction performance of our models can be significantly improved by including additional symptom indicators.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

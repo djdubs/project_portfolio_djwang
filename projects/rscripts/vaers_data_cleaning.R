@@ -59,7 +59,7 @@ vaers_clean <- vaers.2018_2021 %>%
 # columns with character strings that do not represent a variable (i.e. SYMPTOM_TEXT) are untouched but temporarily kept in the dataframe
 # columns included in VAERS form 2 are untouched (FORM_VERS and all following columns)
 # Severity and high_severity represent the categorical and binary responses respectively
-# currently unsure of the discrepancy between ER_VISIT and ER_ED_VISIT, they do not have consistent matching values
+# currently uncertain of the discrepancy between ER_VISIT and ER_ED_VISIT, which share similar but inconsistent values
 # ______________________________________________________________________________
 
 
