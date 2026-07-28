@@ -1,0 +1,4 @@
+---
+title: "Predicting Pitching Data with an MCMC Algorithm"
+editor: visual
+---
