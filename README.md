@@ -15,3 +15,11 @@ Note: To access datasets, search for
   - Blanks, missing values, or zeroes for latitude and longitude should also be filtered out.
 - Townships
   - When downloading, choose the Shapefile option
+  
+**Classification Task**\
+Link: https://vaers.hhs.gov/data/datasets.html \
+Note: The main data, symptom data, and vaccine data are all used for the years 2018-2021
+
+**Monte Carlo**\
+Download link: Pitching data
+
