@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Daniel Wang’s Project Portfolio</title>
+<title>Predicting Pitching Data with an MCMC Algorithm</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -50,6 +50,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="no_stylist.css">
 </head>
@@ -66,7 +95,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -78,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Classification Prediction Task</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./mcmc_pred.html"> 
+    <a class="nav-link active" href="./mcmc_pred.html" aria-current="page"> 
 <span class="menu-text">Monte Carlo Algorithm Development</span></a>
   </li>  
 </ul>
@@ -99,7 +128,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Daniel Wang’s Project Portfolio</h1>
+<h1 class="title">Predicting Pitching Data with an MCMC Algorithm</h1>
 </div>
 
 
@@ -116,18 +145,151 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="columns">
-<div class="column" style="width:40%;">
-<p><img src="professional_photo.png" class="img-fluid" style="width:80.0%"></p>
-<p>Email: daniel.jdubs@gmail.com<br>
-Phone: 919-593-9595</p>
-</div><div class="column" style="width:60%;">
-<p>Hello, I’m Daniel Wang and I recently graduated from with a masters degree in statistics from NC State. This is a portfolio I’ve made to showcase projects covering data cleaning, visualization, and statistical modelling. These were challenging experiences that highlight the methods and tools I use when working with data. My goal is to not only procure informative, valid analyses but also to clearly communicate the results to a broad audience.</p>
-<p>Studying statistics has given me an opportunity to use mathematics, statistical methods, and critical thinking to tackle complex problems. Tools such as R, Python, or SAS are languages I regularly use for cleaning, modelling, and visualizing data among other purposes. If you have any questions about my work or would like to reach out, feel free to contact me!</p>
+<p>Can a pitcher’s ERA(estimated run average) be used to predict an opposing batter’s batting average and exit velocity? In this study, I’ll be using a Bayesian statistical model investigate the relationship between these variables in a regression-based analysis. By using a Bayesian framework, we can easily apply future baseball data to the predictive model.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="projects/results/mcmc_p1.png" class="img-fluid figure-img" width="700"></p>
+<figcaption>Histogram of Estimated Run Average with 107 Observations</figcaption>
+</figure>
+</div>
+<p>Based on an initial look at ERA, it appears to have a roughly bell-shaped distribution with a strictly positive support. There are a few options I have for distributions that are positively continuous. For this study I will be fitting the ERA as a gamma variable. Below is a brief template of the pursued model.</p>
+<p>Model for ERA where ERA==Y: <span class="math inline">\(Y_i \sim Gamma(v, \frac{\mu}{v})\)</span>, <span class="math inline">\(E[Y_i]=\mu, V(Y_i)=\frac{\mu^2}{v}\)</span><br>
+In this model, the parameters for the Gamma distribution are redefined so that the shape=<span class="math inline">\(v\)</span> and the scale=<span class="math inline">\(\frac{\mu}{v}\)</span><br>
+Similarly to the previous model but with new parameterization, the mean model is as follows: <span class="math inline">\(log(\mu)=X\beta\)</span>:</p>
+<p><span class="math inline">\(Y_i \sim Gamma(v, \frac{e^{X\beta}}{v})\)</span><br>
+This will make the linear predictors multiplicative on the response.</p>
+<p>The prior distribution of the <span class="math inline">\(\beta\)</span>’s are given by:</p>
+<p><span class="math inline">\(\beta_p \sim N(0, \tau^2I_p)\)</span>, <span class="math inline">\(E[\beta]=0, V(\beta)=\tau^2I_p\)</span></p>
+<p>For the parameter <span class="math inline">\(v\)</span>, we have the prior distribution:</p>
+<p><span class="math inline">\(v \sim Gamma(a_0, b_o)\)</span>, <span class="math inline">\(E[v]=a_0b_0, V(v)=a_0b_0^2\)</span></p>
+<p>We could have also used an exponential model here, but we may lose valuable information by not fitting an additional parameter. Other positive continuous distributions, such as the log-normal and chi-square distributions tend to favor more skewed data, which is why I’ve elected to use the gamma model here. Additionally, there is additional flexibility when choosing a prior distribution for the shape <span class="math inline">\(v\)</span>. While I’ve decided to use a gamma prior for <span class="math inline">\(v\)</span>, an inverse-gamma or non-informative prior are also reasonable options here.</p>
+<section id="estimation-procedure" class="level1">
+<h1>Estimation Procedure</h1>
+<p>I am interested in deriving the posterior distribution:<br>
+<span class="math inline">\(\pi(\beta,v|Y_1,...,Y_n)\)</span><br>
+This study will use a Markov Chain Monte Carlo method to approximate the posterior distribution of interest. More specifically, I am going to use a Metropolis-Hastings algorithm to draw samples from the posterior. The primary reason for this is that the conditional distribution of <span class="math inline">\(\beta\)</span>(Normal) given <span class="math inline">\(Y_i\)</span>(Gamma) cannot be derived reasonably by hand.</p>
+<p>To conduct the procedure, we only need a couple of items:<br>
+1. The sample data<br>
+2. The distribution of the response variable (ERA)<br>
+3. The prior distributions for <span class="math inline">\(\beta\)</span> and <span class="math inline">\(v\)</span></p>
+<p>We will also need to specify distributions from which we will draw proposals from. For our <span class="math inline">\(\beta\)</span>’s, a normal distribution will suffice as a proposal distribution. For <span class="math inline">\(v\)</span>, however, we need to be careful since it has the support <span class="math inline">\(v\in(0, +\inf)\)</span>. A gamma distribution will work for in this case.</p>
+<section id="simulation-study" class="level2">
+<h2 data-anchor-id="simulation-study">Simulation Study</h2>
+<p>For each model, we divide the procedure into two major steps. The first step uses the MCMC algorithm on the actual data set. This will give us estimates for the parameters of the posterior distribution.<br>
+The second step will involve generating synthetic data using the estimated parameter values. This will allow us to evaluate the performance of the procedure by comparing the fitted distribution from the synthetic data to the estimates we obtained from the actual data.</p>
+<p>Using the MCMC algorithm on the actual data, we retrieve these estimates for the parameters.<br>
+<span class="math inline">\(\beta_p\)</span>:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>      Intercept Batting Average      EV Average               v 
+   -0.923390136     0.057963857     0.009712401    37.311308444 </code></pre>
 </div>
 </div>
+<p>We have the effects on ERA from the intercept, batting average, EV average and gamma parameter <span class="math inline">\(v\)</span>. Based on these estimates, it would seem that the ERA increases by an average amount of 0.06 for each percentage increase in batting average. Exit velocity, on the other hand, seems to have a much smaller effect at about 0.01. To view the significance of these effects, that is whether or not they are useful predictors of ERA, we have the following confidence intervals.</p>
+<p>Batting Average Confidence Interval:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Estimate   Std.Error      lower      upper
+Batting Average 0.05796386 0.006529977 0.04516534 0.07076238</code></pre>
+</div>
+</div>
+<p>When the confidence interval is fully above or below zero, we have evidence of a significant effect. Based on this confidence interval (5% significance level), there seems to be an effect for batting average on the ERA.</p>
+<p>EV Average Confidence Interval:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>              Estimate   Std.Error        lower     upper
+EV Average 0.009712401 0.009415376 -0.008741397 0.0281662</code></pre>
+</div>
+</div>
+<p>We do not see evidence of an effect for exit velocity.</p>
+<p>Shape <span class="math inline">\(v\)</span> Confidence Interval:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  Estimate Std.Error    lower    upper
+v 37.31131   5.02998 27.45273 47.16989</code></pre>
+</div>
+</div>
+<p>While we aren’t necessarily conducting tests for <span class="math inline">\(v\)</span>, this is a useful test to see if a gamma model is better suited for prediction than the exponential model. To elaborate, an exponential model is a special case of the gamma model where the shape <span class="math inline">\(v\)</span> is equal to one. Here we can see that the parameter <span class="math inline">\(v\)</span> was useful in this case.</p>
+</section>
+<section id="estimation-performance" class="level2">
+<h2 data-anchor-id="estimation-performance">Estimation Performance</h2>
+<p>Here we now use our MCMC algorithm on generated data to test it’s performance. The simulation procedure included generating the data from the statistical model, applying the MCMC algorithm to the data, and saving the samples. I decided to repeat this process 10 times for each model.</p>
+<p>We have the following estimates from each run of the algorithm:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] -0.0260406860  0.0593674332 -0.0009286261 26.8696904063
+
+[[2]]
+[1] -0.917842042  0.058996389  0.009578318 24.080540792
+
+[[3]]
+[1] -0.2902557542  0.0647045094  0.0003293464 24.4489164768
+
+[[4]]
+[1] -1.29032874  0.05425564  0.01462497 34.00544895
+
+[[5]]
+[1] -0.237272494  0.054521730  0.003243972 31.958969334
+
+[[6]]
+[1] -0.97023338  0.05713295  0.01058874 24.65831609
+
+[[7]]
+[1] -1.45404830  0.05924097  0.01517381 27.28434448
+
+[[8]]
+[1]  0.0452646362  0.0553544215 -0.0005355802 31.2033184613
+
+[[9]]
+[1] -0.672979894  0.050604321  0.009155781 25.925490947
+
+[[10]]
+[1] -0.387288979  0.054683676  0.004556977 27.870432850</code></pre>
+</div>
+</div>
+<p>Combined, the estimates for each parameter were:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.620102563  0.056886204  0.006578771 27.830546879</code></pre>
+</div>
+</div>
+<p>Lastly, we can also use histograms to view the distributions of each parameter given the synthesized data.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mcmc_pred_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mcmc_pred_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mcmc_pred_files/figure-html/unnamed-chunk-8-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mcmc_pred_files/figure-html/unnamed-chunk-8-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These histograms are modeled using the combined data from each run of the algorithm. The blue and red dotted lines represent the 0.025th and 0.975th quantiles respectively while the green line represents the mean derived from the Gamma model. Clearly, the variance for <span class="math inline">\(v\)</span> was very high and the model struggled to capture it’s true value. On the other hand, however, we better captured the values for the batting average and EV average than we would’ve with an exponential model. To capture the shape <span class="math inline">\(v\)</span> more accurately, I would need to address two elements. First would be the prior distribution, as the parameter values for the priors were not optimized. The other element to address would be the proposal distribution for <span class="math inline">\(v\)</span> and the tuning scheme for the Metropolis Hastings algorithm. While the proposal distribution did center around the parameter value, the variance of that distribution was not optimized. The high variance of <span class="math inline">\(v\)</span> hints that the tuning scheme may need to be tweaked for <span class="math inline">\(v\)</span> individually.</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

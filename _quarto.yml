@@ -4,20 +4,38 @@ project:
 
 website:
   search: false
-  title: "Project Portfolio"
   navbar:
     left:
       - href: index.qmd
         text: Home
       - href: spatial_analysis.qmd
-        text: Spatial Analysis
+        text: Traffic Crime Spatial Analysis
       - href: vaers_report.qmd
-        text: Severity Classification Task
+        text: Classification Prediction Task
+      - href: mcmc_pred.qmd
+        text: Monte Carlo Algorithm Development
 
 format:
   html:
     theme: pulse
     css: no_stylist.css
+    code-links: 
+      - repo
+      - text: Spatial Analysis
+        icon: file-code
+        href: projects/rscripts/spatial_analysis.R
+      - text: VAERS Data Cleaning
+        icon: file-code
+        href: projects/rscripts/vaers_data_cleaning.R
+      - text: VAERS Modelling
+        icon: file-code
+        href: projects/rscripts/vaers_models.R
+      - text: MCMC Algorithms
+        icon: file-code
+        href: projects/rscripts/run_file.R
+      - text: MCMC Simulations
+        icon: file-code
+        href: projects/rscripts/out_file.r
     toc: false
     anchor-sections: false
 

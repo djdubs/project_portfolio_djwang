@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Vaccine Severity Prediction – Project Portfolio</title>
+<title>Vaccine Severity Prediction</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -88,17 +88,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="no_stylist.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Project Portfolio</span>
-    </a>
-  </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -110,11 +105,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./spatial_analysis.html"> 
-<span class="menu-text">Spatial Analysis</span></a>
+<span class="menu-text">Traffic Crime Spatial Analysis</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./vaers_report.html" aria-current="page"> 
-<span class="menu-text">Severity Classification Task</span></a>
+<span class="menu-text">Classification Prediction Task</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./mcmc_pred.html"> 
+<span class="menu-text">Monte Carlo Algorithm Development</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -127,7 +126,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/djdubs/project_portfolio_djwang/" target="_blank"><i class="bi bi-github"></i>GitHub Repo</a></li><li><a href="projects/rscripts/spatial_analysis.R"><i class="bi bi-file-code"></i>Spatial Analysis</a></li><li><a href="projects/rscripts/vaers_data_cleaning.R"><i class="bi bi-file-code"></i>VAERS Data Cleaning</a></li><li><a href="projects/rscripts/vaers_models.R"><i class="bi bi-file-code"></i>VAERS Modelling</a></li><li><a href="projects/rscripts/run_file.R"><i class="bi bi-file-code"></i>MCMC Algorithms</a></li><li><a href="projects/rscripts/out_file.r"><i class="bi bi-file-code"></i>MCMC Simulations</a></li></ul></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -150,7 +150,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This is a project I worked on as part of my statistical learning methods course. Here, me and two peers conduct a predictive modelling analysis for the VAERS event reports collected in 2018-2021. While our main goal was to explore patterns in responses to different vaccines, we were also interested in viewing changes from the oncoming Covid-19 pandemic. The dataset encompasses approximately 922,000 records and includes demographic, temporal, geographic, administrative, and free-text fields.</p>
+<p>Here, me and two peers conduct a predictive modelling analysis for the VAERS event reports collected in 2018-2021. While our main goal was to explore patterns in responses to different vaccines, we were also interested in viewing changes from the oncoming Covid-19 pandemic. The dataset encompasses approximately 922,000 records and includes demographic, temporal, geographic, administrative, and free-text fields.</p>
 <p>Our variable of interest is how severe a given patient’s response was to receiving a vaccine. For analysis purposes, a binary indicator was used to capture high-severity cases. These include instances of hospitalization, life-threatening illness, disability, or death. The predictive analysis uses patient demographics, symptoms, and vaccine information to produce our predictions.</p>
 <p>The distribution of severity is heavily right-skewed. Approximately 68% of reports carry no documented clinical outcome while 8-9% qualify as high-severity. Exploratory analysis identifies age and sex as strong structured predictors, with older and younger individuals facing higher odds of severe outcomes, while males experience higher odds of severe outcomes relative to females. Reporting volume surged dramatically in 2020-2021 due to the COVID-19 vaccine rollout, though the proportional severity composition remained stable across years. Predictive analysis suggests that the presence of symptoms such as dyspnoea and asthenia are strongly correlated with high severity cases.</p>
 <section id="data-overview" class="level1">
@@ -194,23 +194,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-anchor-id="modelling-outline-evaluation">Modelling Outline &amp; Evaluation</h2>
 <p>There are a variety of different models that can be used for classification tasks. Here, we’ll be using logistic regression, discriminant analysis(LDA &amp; QDA), and bagged random forest. LDA and QDA were fit using repeated cross validation and the random forest model was fit using out-of-bag resampling. The procedure of fitting a model can be generalized below.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The training method, repeate cross validation in this case</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The training method, repeated cross validation in this case</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tr <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"repeatedcv"</span>, <span class="at">number =</span> <span class="dv">10</span>, <span class="at">repeats =</span> <span class="dv">20</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting a linear discriminant analysis using the above training method</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>lda.fit <span class="ot">&lt;-</span> <span class="fu">train</span>(high_severity <span class="sc">~</span> .,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> trainer, <span class="at">method=</span><span class="st">"lda"</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trControl =</span> tr)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicting severity on the test data using the trained model</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>lda.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(lda.fit, <span class="at">newdata =</span> test, <span class="at">type =</span> <span class="st">"raw"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># The train function models the data using the training method we previously specified</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>lda.fit <span class="ot">&lt;-</span> <span class="fu">train</span>(high_severity <span class="sc">~</span> .,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> trainer, <span class="at">method=</span><span class="st">"lda"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trControl =</span> tr)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicting severity on the test data using the trained model</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># We compare the predicted results and the actual results to evaluate the model</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>lda.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(lda.fit, <span class="at">newdata =</span> test, <span class="at">type =</span> <span class="st">"raw"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To evaluate the performance of each model, we primarily use the prediction accuracy/error and the model specificity. The model specificity represents the model’s ability to detect an occurrence of an event when it happens. Since the response variable is a relatively rare event, the no-information rate is already high at about 92%. Therefore, the ability for a model to detect occurrences of high severity has higher priority in our evaluation.</p>
 <p>For each model, predictions were made on the test data and were used to make the following confusion tables, presenting the predicted vs.&nbsp;true values for each fit. The no-information rate from the random sample is 92.83% and the test size is 3000.</p>
 </section>
 <section id="comparisons-discussion" class="level2">
 <h2 data-anchor-id="comparisons-discussion">Comparisons &amp; Discussion</h2>
-<p>The logistic model offers slightly higher accuracy than the no-information rate, but only slightly. In addition to the low specificity rate, the logistic model doesn’t seem to offer much in comparison to the no-information rate. The LDA fit has slightly lower accuracy than the NIR but on the other hand has a higher specificity rate. The QDA model has much lower accuracy than the NIR but has a much higher specificity rate than the other models at 0.5163. The random forest model has the highest accuracy edging out the logistic model but slightly lower specificity rate than the LDA model.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>          Model Accuracy Specificity
+1      Logistic     0.93        0.11
+2           LDA     0.92        0.26
+3           QDA     0.83        0.52
+4 Random Forest     0.94        0.23</code></pre>
+</div>
+</div>
+<p>The logistic model offers slightly higher accuracy than the no-information rate, but only slightly. In addition to the low specificity rate (a rate of 0.11 translates to 11% of high severity cases being identified), the logistic model doesn’t seem to offer much in comparison to the no-information rate. The LDA fit has slightly lower accuracy than the NIR but on the other hand has a higher specificity rate. The QDA model has much lower accuracy than the NIR but has a much higher specificity rate than the other models at 0.5163. The random forest model has the highest accuracy edging out the logistic model but slightly lower specificity rate than the LDA model.</p>
 <p>Comparing each model, we can see that the random forest model completely outperforms the logistic model in both accuracy and specificity. The LDA and QDA models both outperform the random forest model in specificity but suffer lower accuracy. While the QDA model has by far the highest specificity rate, it also incorrectly predicts many high severity cases. Since the LDA model presents the most balance in terms of the accuracy and specificity rate, we choose this model as the best fit for the given data. However, if we are mostly interested in a model with a high specificity rate, then the QDA model in this instance would be a reasonable choice. In the last report, when using only age, sex, and days to onset as the predictors, we saw that the resulting models were unable to detect high severity cases. By adding several symptom indicators, we were able to detect significantly more high severity cases. Since 5 out of 7 symptoms showed significance in the logistic model, it seems that prediction performance of our models can be significantly improved by including additional symptom indicators.</p>
 
 
