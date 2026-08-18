@@ -21,5 +21,5 @@ Link: https://vaers.hhs.gov/data/datasets.html \
 Note: The main data, symptom data, and vaccine data are all used for the years 2018-2021
 
 **Monte Carlo**\
-Download link: Pitching data
+Download link: [Pitching data](stats_pitching.csv)
 
